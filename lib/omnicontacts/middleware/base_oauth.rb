@@ -86,11 +86,11 @@ module OmniContacts
       rescue ::Timeout::Error, ::Errno::ETIMEDOUT => e
         handle_error :timeout, e
       rescue ::RuntimeError => e
+        raise e
         handle_error :internal_error, e
       end
 
       def handle_error error_type, exception
-        raise exception
         logger.puts("Error #{error_type} while processing #{@env["PATH_INFO"]}: #{exception.message}") if logger
         failure_url = "#{ MOUNT_PATH }failure?error_message=#{error_type}&importer=#{class_name}"
         params_url = append_request_params(failure_url)
